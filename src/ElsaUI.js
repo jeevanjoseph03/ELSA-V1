@@ -1,22 +1,97 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
-import axios from "axios"; // Import axios
+import Groq from "groq-sdk";
 
-// Voice Recognition & Synthesis Setup
 const SpeechRecognition =
   window.SpeechRecognition || window.webkitSpeechRecognition;
 const recognition = new SpeechRecognition();
 recognition.continuous = false;
 recognition.lang = "en-US";
 
+const groq = new Groq({
+  apiKey: process.env.REACT_APP_GROQ_API_KEY,
+  dangerouslyAllowBrowser: true,
+});
+
 export default function ElsaUI() {
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [transcript, setTranscript] = useState("");
   const [response, setResponse] = useState("");
-  
-  const API_KEY = process.env.REACT_APP_OPENAI_API_KEY; // Secure API key access
 
-  // Start listening when the user clicks
+  const getGroqResponse = useCallback(async (userInput) => {
+    try {
+      setIsSpeaking(true);
+
+      const { choices } = await groq.chat.completions.create({
+        messages: [
+          { role: "system", content: "You are ELSA, a helpful therapist." },
+          { role: "user", content: userInput },
+        ],
+        model: "llama-3.3-70b-versatile",
+      });
+
+      const aiText = choices[0]?.message?.content || "I'm not sure how to respond.";
+      setResponse(aiText);
+      speak(aiText);
+    } catch (error) {
+      console.error("Error fetching Groq response:", error);
+      setResponse("Oops! Something went wrong.");
+    }
+  }, []);
+
+  useEffect(() => {
+    recognition.onresult = async (event) => {
+      const userInput = event.results[0][0].transcript;
+      setTranscript(userInput);
+      getGroqResponse(userInput);
+    };
+
+    recognition.onerror = (event) => {
+      console.error("Speech recognition error:", event.error);
+    };
+  }, [getGroqResponse]);
+
+  const speak = (text) => {
+    const utterance = new SpeechSynthesisUtterance(text);
+
+    // Wait for voices to load
+    const loadVoices = () => {
+      const voices = speechSynthesis.getVoices();
+      const femaleVoice = voices.find(
+        (voice) => voice.name.includes("Google UK English Female") || voice.name.includes("Microsoft Zira")
+      );
+
+      if (femaleVoice) {
+        utterance.voice = femaleVoice;
+      }
+
+      // Add emotions and modulations based on the content
+      if (text.includes("happy") || text.includes("great")) {
+        utterance.pitch = 1.5; // Higher pitch for excitement
+        utterance.rate = 1.2;  // Slightly faster rate
+      } else if (text.includes("sad") || text.includes("sorry")) {
+        utterance.pitch = 0.8; // Lower pitch for sadness
+        utterance.rate = 0.9;  // Slower rate
+      } else if (text.includes("angry") || text.includes("frustrated")) {
+        utterance.pitch = 1.0; // Neutral pitch
+        utterance.rate = 1.3;  // Faster rate for urgency
+        utterance.volume = 1.0; // Louder volume
+      } else {
+        utterance.pitch = 1.0; // Default pitch
+        utterance.rate = 1.0;  // Default rate
+      }
+
+      utterance.onend = () => setIsSpeaking(false);
+      speechSynthesis.speak(utterance);
+    };
+
+    if (speechSynthesis.getVoices().length === 0) {
+      speechSynthesis.addEventListener("voiceschanged", loadVoices);
+    } else {
+      loadVoices();
+    }
+  };
+
   const startListening = () => {
     if (isSpeaking) {
       console.warn("Speech recognition is already running.");
@@ -25,57 +100,6 @@ export default function ElsaUI() {
     setTranscript("");
     setResponse("");
     recognition.start();
-  };
-
-  // Handle Speech Recognition
-  useEffect(() => {
-    recognition.onresult = async (event) => {
-      const userInput = event.results[0][0].transcript;
-      setTranscript(userInput);
-      getAIResponse(userInput);
-    };
-
-    recognition.onerror = (event) => {
-      console.error("Speech recognition error:", event.error);
-    };
-  }, []);
-
-  // Fetch response from OpenAI API using axios
-  const getAIResponse = async (userInput) => {
-    try {
-      setIsSpeaking(true);
-
-      const { data } = await axios.post(
-        "https://api.openai.com/v1/chat/completions",
-        {
-          model: "gpt-3.5-turbo",
-          messages: [
-            { role: "system", content: "You are a helpful AI therapist." },
-            { role: "user", content: userInput },
-          ],
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${API_KEY}`,
-          },
-        }
-      );
-
-      const aiText = data.choices[0]?.message?.content || "I'm not sure how to respond.";
-      setResponse(aiText);
-      speak(aiText);
-    } catch (error) {
-      console.error("Error fetching AI response:", error);
-      setResponse("Oops! Something went wrong.");
-    }
-  };
-
-  // Text-to-Speech Function
-  const speak = (text) => {
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.onend = () => setIsSpeaking(false);
-    speechSynthesis.speak(utterance);
   };
 
   return (
