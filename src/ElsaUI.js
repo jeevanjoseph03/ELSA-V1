@@ -7,6 +7,7 @@ const SpeechRecognition =
 const recognition = new SpeechRecognition();
 recognition.continuous = false;
 recognition.lang = "en-US";
+recognition.isRunning = false; // Add a flag to track recognition state
 
 const groq = new Groq({
   apiKey: process.env.REACT_APP_GROQ_API_KEY,
@@ -16,7 +17,6 @@ const groq = new Groq({
 export default function ElsaUI() {
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [transcript, setTranscript] = useState("");
-  const [response, setResponse] = useState("");
 
   const getGroqResponse = useCallback(async (userInput) => {
     try {
@@ -31,11 +31,10 @@ export default function ElsaUI() {
       });
 
       const aiText = choices[0]?.message?.content || "I'm not sure how to respond.";
-      setResponse(aiText);
       speak(aiText);
     } catch (error) {
       console.error("Error fetching Groq response:", error);
-      setResponse("Oops! Something went wrong.");
+      
     }
   }, []);
 
@@ -48,6 +47,12 @@ export default function ElsaUI() {
 
     recognition.onerror = (event) => {
       console.error("Speech recognition error:", event.error);
+    };
+
+    // Add an `onend` handler to reset the `isRunning` flag
+    recognition.onend = () => {
+      console.log("Speech recognition stopped");
+      recognition.isRunning = false; // Reset the flag when recognition stops
     };
   }, [getGroqResponse]);
 
@@ -93,13 +98,20 @@ export default function ElsaUI() {
   };
 
   const startListening = () => {
-    if (isSpeaking) {
+    if (isSpeaking || recognition.isRunning) {
       console.warn("Speech recognition is already running.");
       return;
     }
+
+    recognition.isRunning = true; // Mark recognition as running
     setTranscript("");
-    setResponse("");
-    recognition.start();
+    try {
+      recognition.start();
+      console.log("Speech recognition started");
+    } catch (error) {
+      console.error("Error starting speech recognition:", error);
+      recognition.isRunning = false; // Reset the flag if an error occurs
+    }
   };
 
   return (
@@ -112,7 +124,6 @@ export default function ElsaUI() {
       ></motion.div>
       <p className="text-lg">Click the blue dot and speak</p>
       <p className="mt-4 text-sm text-gray-400">You: {transcript}</p>
-      <p className="mt-2 text-sm text-green-400">Elsa: {response}</p>
     </div>
   );
 }
