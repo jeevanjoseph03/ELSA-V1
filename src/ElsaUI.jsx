@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Groq from "groq-sdk";
-import axios from "axios"; // Make sure to install axios if not already installed
+import axios from "axios"; 
 
 const SpeechRecognition =
   window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -15,7 +15,6 @@ const groq = new Groq({
   dangerouslyAllowBrowser: true,
 });
 
-// ElevenLabs configuration
 const ELEVEN_LABS_API_KEY = process.env.REACT_APP_ELEVEN_LABS_API_KEY;
 // Change this to your preferred voice ID from ElevenLabs
 // Some popular female voices: "21m00Tcm4TlvDq8ikWAM" (Rachel), "EXAVITQu4vr4xnSDxMaL" (Bella)
