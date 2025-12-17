@@ -1,72 +1,79 @@
-# Getting Started with Create React App
+# ELSA-V1
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+[![ELSA-V1 Homepage](https://elsa-v1.vercel.app)](https://elsa-v1.vercel.app)
 
-## Available Scripts
+## Overview
 
-In the project directory, you can run:
+**ELSA-V1** is an AI-powered emotional support assistant designed to sense your mood and respond with care, comfort, and meaningful conversation. The application leverages modern web technologies and AI to deliver empathetic communication and well-being support to users in a secure, user-friendly environment.
 
-### `npm start`
+## Features
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- **Mood Detection**: Automatically detects user's emotional state through AI.
+- **Conversational AI**: Provides responsive, context-aware dialogue to help users navigate emotional moments.
+- **Care and Comfort**: Delivers supportive messages and resources tailored to user needs.
+- **Modern UI/UX**: User interface designed for accessibility and ease of use, meeting European digital product standards.
+- **Privacy Focused**: Does not collect unnecessary personal information and follows GDPR guidelines.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Live Demo
 
-### `npm test`
+Access the production version here: [https://elsa-v1.vercel.app](https://elsa-v1.vercel.app)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Installation
 
-### `npm run build`
+1. **Clone the repository**  
+   ```bash
+   git clone https://github.com/jeevanjoseph03/ELSA-V1.git
+   cd ELSA-V1
+   ```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+2. **Install dependencies**  
+   ```bash
+   npm install
+   ```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+3. **Start the development server**  
+   ```bash
+   npm run dev
+   ```
+   By default, the app runs on [http://localhost:3000](http://localhost:3000).
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Technologies Used
 
-### `npm run eject`
+- **JavaScript**: Application logic and frontend interactivity.
+- **Node.js & npm**: Core runtime and package management.
+- **Tailwind CSS**: Modern, utility-first CSS framework for rapid styling ([tailwind.config.js](./tailwind.config.js)).
+- **PostCSS**: CSS tool for transforming styles with JS plugins ([postcss.config.js](./postcss.config.js)).
+- **Frontend framework (See `package.json`)**
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## Project Structure
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```
+ELSA-V1/
+│
+├── public/              # Static assets
+├── src/                 # Application source code
+├── package.json         # Project metadata and dependencies
+├── tailwind.config.js   # Tailwind CSS configuration
+├── postcss.config.js    # PostCSS plugins setup
+└── README.md            # This documentation
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## Usage
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+Interact with ELSA-V1 after local setup or by accessing the [live instance](https://elsa-v1.vercel.app). Upon launch, engage in a conversation; the AI will sense your mood and respond with supportive dialogue.
 
-## Learn More
+## Contributing
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Contributions are welcome! Please open issues or submit pull requests for improvements, complying with best practices and code standards.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## License
 
-### Code Splitting
+This project currently does not have a license file. For usage and redistribution requirements, please contact the repository owner.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## Acknowledgements
 
-### Analyzing the Bundle Size
+Developed and maintained by [@jeevanjoseph03](https://github.com/jeevanjoseph03).
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+---
 
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
-
-.
+© 2025 jeevanjoseph03. All rights reserved.
